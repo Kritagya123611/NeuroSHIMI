@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "rootDir": "./",
+    "baseUrl": "./",
+    "paths": {
+      "*": ["node_modules/*", "src/types/*"]
+    }
+  },
+  "include": [
+    "circuits/**/*.circom",
+    "memory/**/*.ts",
+    "prover/**/*.ts",
+    "agent/**/*.ts",
+    "test/**/*.ts",
+    "scripts/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "circuits_compiled",
+    "data/memory_snapshots"
+  ]
+}
