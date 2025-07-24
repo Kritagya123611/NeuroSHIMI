@@ -1,33 +1,23 @@
-// Inclusion circuit for proving memory inclusion in a Merkle tree
 pragma circom 2.0.0;
 
-include "../utils/poseidon.circom"; // Include Poseidon hashing circuit
+include "poseidon.circom";
+include "lib/merkle.circom";
 
-// Define the inclusion circuit
-template Inclusion() {
-    // Input signals
-    signal input leaf; // The leaf to be included
-    signal input root; // The Merkle root
-    signal input path[]; // The Merkle path
-    signal input pathIndices[]; // Indices of the path
+template MerkleInclusion(depth) {
+    signal input leaf;
+    signal input root;
+    signal input pathElements[depth];
+    signal input pathIndices[depth];
 
-    // Intermediate signals
-    signal hash; // Hash of the current node
-    signal current; // Current node in the Merkle tree
+    component proof = MerkleProof(depth);
+    proof.leaf <== leaf;
 
-    // Initialize the current node as the leaf
-    current <== leaf;
-
-    // Iterate through the path to compute the hash
-    for (var i = 0; i < path.length; i++) {
-        // Compute the hash based on the current node and the path
-        current <== poseidon([current, path[i]]);
+    for (var i = 0; i < depth; i++) {
+        proof.pathElements[i] <== pathElements[i];
+        proof.pathIndices[i] <== pathIndices[i];
     }
 
-    // The final hash should equal the Merkle root
-    hash <== current;
-    hash === root; // Constraint to ensure the computed hash matches the root
+    root === proof.root;
 }
 
-// Instantiate the Inclusion circuit
-component main = Inclusion();
+component main = MerkleInclusion(3);
